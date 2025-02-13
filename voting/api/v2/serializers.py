@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from restaurants.models import Menu
 from restaurants.serializers import MenuDetailSerializer
 from voting.models import Vote
 
@@ -22,15 +23,27 @@ class VoteSerializerV2(serializers.ModelSerializer):
 
 class VoteDetailSerializerV2(serializers.ModelSerializer):
     menu = MenuDetailSerializer(read_only=True)
+    restaurant_name = serializers.CharField(
+        source="menu.restaurant.name", read_only=True
+    )
+    menu_date = serializers.DateField(source="menu.date", read_only=True)
     employee_email = serializers.EmailField(source="employee.email", read_only=True)
     employee_name = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Vote
-        fields = ("id", "menu", "date", "employee_email", "employee_name")
+        fields = (
+            "id",
+            "menu",
+            "date",
+            "restaurant_name",
+            "menu_date",
+            "employee_email",
+            "employee_name",
+        )
 
     def get_employee_name(self, obj):
-        return f"{obj.employee.get_full_name()}"
+        return obj.employee.get_full_name()
 
 
 class VotingResultSerializerV2(serializers.Serializer):
@@ -41,11 +54,12 @@ class VotingResultSerializerV2(serializers.Serializer):
     percentage = serializers.SerializerMethodField()
 
     def get_menu_details(self, obj):
-        menu = obj["menu"]
+        menu = Menu.objects.get(id=obj["menu"])
         return MenuDetailSerializer(menu).data
 
     def get_restaurant_name(self, obj):
-        return obj["menu"].restaurant.name
+        menu = Menu.objects.get(id=obj["menu"])
+        return menu.restaurant.name
 
     def get_percentage(self, obj):
         total_votes = sum(item["votes_count"] for item in self.context["results"])

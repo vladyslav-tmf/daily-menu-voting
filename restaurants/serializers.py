@@ -11,6 +11,7 @@ class MenuItemSerializer(serializers.ModelSerializer):
 
 class MenuSerializer(serializers.ModelSerializer):
     items = MenuItemSerializer(many=True, required=False)
+    date = serializers.DateField(format="%Y-%m-%d")
 
     class Meta:
         model = Menu

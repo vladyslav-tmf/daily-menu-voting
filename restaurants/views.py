@@ -1,7 +1,6 @@
 from django.utils import timezone
-from rest_framework import generics, status
+from rest_framework import generics
 from rest_framework.exceptions import ValidationError
-from rest_framework.response import Response
 
 from restaurants.models import Menu, Restaurant
 from restaurants.permissions import IsAdminOrReadOnly

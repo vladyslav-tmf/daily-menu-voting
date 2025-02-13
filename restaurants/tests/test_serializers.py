@@ -89,7 +89,9 @@ class TestMenuSerializer:
     def test_restaurant_is_read_only(self):
         menu = MenuFactory()
         new_restaurant = RestaurantFactory()
-        serializer = MenuSerializer(menu, data={"restaurant": new_restaurant.id})
+        serializer = MenuSerializer(
+            menu, data={"restaurant": new_restaurant.id, "date": menu.date}
+        )
         assert serializer.is_valid()
         updated_menu = serializer.save()
         assert updated_menu.restaurant == menu.restaurant
