@@ -16,6 +16,8 @@ dependencies = [
 [dependency-groups]
 dev = [
     "black>=25.1.0",
+    "factory-boy>=3.3.3",
+    "faker>=36.1.0",
     "flake8>=7.1.1",
     "pytest>=8.3.4",
     "pytest-cov>=6.0.0",
@@ -32,3 +34,8 @@ extend-exclude = '''
 ^/migrations/|
 ^/\.venv/
 '''
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+addopts = "-v --cov=. --cov-report=term-missing --no-cov-on-fail"
