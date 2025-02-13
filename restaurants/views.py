@@ -33,9 +33,7 @@ class MenuCreateView(generics.CreateAPIView):
     permission_classes = (IsAdminOrReadOnly,)
 
     def perform_create(self, serializer):
-        restaurant = generics.get_object_or_404(
-            Restaurant, pk=self.kwargs["pk"]
-        )
+        restaurant = generics.get_object_or_404(Restaurant, pk=self.kwargs["pk"])
         # Check if menu for this date already exists
         date = serializer.validated_data.get("date", timezone.now().date())
         if Menu.objects.filter(restaurant=restaurant, date=date).exists():
