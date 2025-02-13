@@ -1,5 +1,6 @@
 from django.utils import timezone
 from rest_framework import generics, status
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from restaurants.models import Menu, Restaurant
@@ -34,13 +35,9 @@ class MenuCreateView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         restaurant = generics.get_object_or_404(Restaurant, pk=self.kwargs["pk"])
-        # Check if menu for this date already exists
         date = serializer.validated_data.get("date", timezone.now().date())
         if Menu.objects.filter(restaurant=restaurant, date=date).exists():
-            return Response(
-                {"detail": "Menu for this date already exists."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            raise ValidationError({"detail": "Menu for this date already exists"})
         serializer.save(restaurant=restaurant)
 
 

@@ -69,10 +69,9 @@ class TestEmployeeProfileView:
         assert response.data["last_name"] == data["last_name"]
 
     def test_get_profile_unauthorized(self):
-        self.client.credentials() # Remove authentication
+        self.client.credentials()  # Remove authentication
         response = self.client.get(self.url)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
-
 
 
 @pytest.mark.django_db
