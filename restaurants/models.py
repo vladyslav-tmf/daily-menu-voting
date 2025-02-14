@@ -15,7 +15,7 @@ class TimeStampedModel(models.Model):
 
 
 class Restaurant(TimeStampedModel):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255, unique=True, db_index=True)
     address = models.TextField()
     contact_phone = models.CharField(max_length=31)
     contact_email = models.EmailField()
@@ -39,7 +39,7 @@ class Menu(TimeStampedModel):
     restaurant = models.ForeignKey(
         Restaurant, on_delete=models.CASCADE, related_name="menus"
     )
-    date = models.DateField(default=timezone.now)
+    date = models.DateField(default=timezone.now, db_index=True)
 
     class Meta:
         ordering = ["-date"]
@@ -71,7 +71,7 @@ class Menu(TimeStampedModel):
 
 class MenuItem(TimeStampedModel):
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE, related_name="items")
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, db_index=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(
         max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0"))]

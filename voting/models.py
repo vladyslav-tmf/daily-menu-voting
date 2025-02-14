@@ -17,10 +17,15 @@ class TimeStampedModel(models.Model):
 
 class Vote(TimeStampedModel):
     employee = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="votes"
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="votes",
+        db_index=True,
     )
-    menu = models.ForeignKey(Menu, on_delete=models.CASCADE, related_name="votes")
-    date = models.DateField(default=timezone.now)
+    menu = models.ForeignKey(
+        Menu, on_delete=models.CASCADE, related_name="votes", db_index=True
+    )
+    date = models.DateField(default=timezone.now, db_index=True)
 
     class Meta:
         ordering = ["-date"]
@@ -28,6 +33,10 @@ class Vote(TimeStampedModel):
             models.UniqueConstraint(
                 fields=["employee", "date"], name="one_vote_per_day"
             )
+        ]
+        indexes = [
+            models.Index(fields=["menu", "date"]),
+            models.Index(fields=["employee", "date"]),
         ]
 
     def __str__(self):

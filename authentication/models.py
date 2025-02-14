@@ -40,15 +40,21 @@ class UserManager(BaseUserManager):
 
 class Employee(AbstractUser):
     username = None
-    email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    date_joined = models.DateTimeField(auto_now_add=True)
+    email = models.EmailField(unique=True, db_index=True)
+    first_name = models.CharField(max_length=255, db_index=True)
+    last_name = models.CharField(max_length=255, db_index=True)
+    date_joined = models.DateTimeField(auto_now_add=True, db_index=True)
 
     objects = UserManager()
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["first_name", "last_name"]),
+            models.Index(fields=["is_active", "is_staff"]),
+        ]
 
     def __str__(self):
         return f"{self.get_full_name()} ({self.email})"
