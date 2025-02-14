@@ -1,0 +1,41 @@
+[project]
+name = "daily-menu-voting"
+version = "0.1.0"
+description = "A RESTful API built with Django and DRF that allows employees to vote for daily restaurant menus. Includes authentication, menu management, voting, and results retrieval."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django>=5.1.6",
+    "djangorestframework>=3.15.2",
+    "djangorestframework-simplejwt>=5.4.0",
+    "drf-spectacular>=0.28.0",
+    "psycopg2-binary>=2.9.10",
+    "python-dotenv>=1.0.1",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "factory-boy>=3.3.3",
+    "faker>=36.1.0",
+    "flake8>=7.1.1",
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "pytest-django>=4.10.0",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py312']
+include = '\.pyi?$'
+extend-exclude = '''
+# A regex preceded with ^/ will apply only to files and directories
+# in the root of the project.
+^/migrations/|
+^/\.venv/
+'''
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+addopts = "-v --cov=. --cov-report=term-missing --no-cov-on-fail"
